@@ -1,4 +1,4 @@
-const getAllJob = async (req, res) => {
+const getAllJobs = async (req, res) => {
   res.send("get all job");
 };
 
@@ -16,4 +16,4 @@ const deleteJob = async (req, res) => {
   res.send("delete all job");
 };
 
-moudule.exports = { getAllJob, getJob, createJob, updateJob, deleteJob };
+module.exports = { getAllJobs, getJob, createJob, updateJob, deleteJob };
