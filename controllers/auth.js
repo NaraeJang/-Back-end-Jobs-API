@@ -4,7 +4,14 @@ const { BadRequestError } = require("../errors/index");
 const bcrypt = require("bcryptjs");
 
 const register = async (req, res) => {
-  const user = await User.create({ ...req.body }); // !IMPORTANT! We also SAVED PASSWORD as a string which is very bad idea. If somebody breaks my app they can just get the password.
+  const { name, email, password } = req.body;
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const tempUser = { name, email, password: hashedPassword };
+
+  const user = await User.create({ ...tempUser });
   res.status(StatusCodes.CREATED).json({ user });
 };
 
