@@ -23,7 +23,7 @@ const jobSchema = new mongoose.Schema(
       required: [true, "Please provide user"],
     },
   },
-  { timestamps: true }
+  { timestamps: true } // It creates createdAt and UpdatedAt properties.
 );
 
 module.exports = mongoose.model("Job", jobSchema);
