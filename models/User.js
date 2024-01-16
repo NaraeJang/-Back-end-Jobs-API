@@ -25,12 +25,14 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+//Mongoose middleware
 UserSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
+// Schema Instance Functions
 UserSchema.methods.createJWT = function () {
   return jwt.sign(
     { userId: this._id, name: this.name },
@@ -39,6 +41,11 @@ UserSchema.methods.createJWT = function () {
       expiresIn: process.env.JWT_LIFETIME,
     }
   );
+};
+
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  return isMatch;
 };
 
 module.exports = mongoose.model("User", UserSchema);
