@@ -9,9 +9,15 @@ const cors = require("cors"); // (Cross Origin Resource Sharing) : to ensure our
 const xss = require("xss-clean"); // Sanitizes the user input in req.body, req.query and req.params. Protects us from cross scripting attacks where the attacker tries to inject some malicious code.
 const rateLimiter = require("express-rate-limit"); // limit the amount of requests the user can make.
 
+// Swagger
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml");
+
 // connectDB
 const connectDB = require("./db/connect");
 const authMiddleware = require("./middleware/authentication");
+
 // routers
 const authRouter = require("./routes/auth");
 const jobsRouter = require("./routes/jobs");
@@ -32,6 +38,11 @@ app.use(express.json());
 app.use(helmet());
 app.use(cors());
 app.use(xss());
+
+app.get("/", (req, res) => {
+  res.send('<h1>Jobs API</h1><a href="/api-use">Documentation</a>');
+});
+app.use("/api-use", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // routes
 app.use("/api/v1/auth", authRouter);
